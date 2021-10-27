@@ -1,0 +1,57 @@
+stages:
+  - clippy
+  - build
+  - deploy
+
+clippy:
+  stage: clippy
+  tags:
+    - nix
+  script:
+    - nix develop --extra-experimental-features 'nix-command flakes' --command bash -c 'cargo clippy -- -D warnings'
+
+build-job:
+  stage: build
+  artifacts:
+    name: "$CI_COMMIT_REF_NAME"
+    paths:
+      - result/*
+  tags:
+    - nix
+  script:
+    - nix --extra-experimental-features 'nix-command flakes' build
+
+build-windows-job:
+  stage: build
+  artifacts:
+    name: "$CI_COMMIT_REF_NAME"
+    paths:
+      - result/*
+  tags:
+    - nix
+  script:
+    - "nix --extra-experimental-features 'nix-command flakes' build .#x86_64-pc-windows-gnu"
+
+build-wasm-job:
+  stage: build
+  artifacts:
+    name: "$CI_COMMIT_REF_NAME"
+    paths:
+      - result/*
+  tags:
+    - nix
+  script:
+    - "nix --extra-experimental-features 'nix-command flakes' build .#wasm-publish"
+
+pages:
+  stage: deploy
+  dependencies:
+  - build-wasm-job
+  artifacts:
+    name: "$CI_COMMIT_REF_NAME"
+    paths:
+      - public/*
+  tags:
+    - nix
+  script:
+    - "mv result/public public"

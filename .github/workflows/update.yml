@@ -1,0 +1,41 @@
+name: Update
+
+on:
+  schedule:
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: cachix/install-nix-action@v22
+      with:
+        extra_nix_config: |
+          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+
+    - name: Update flake inputs
+      run: nix flake lock --update-input nixpkgs
+
+    - name: Update Erlang and Elixir
+      run: nix run .#update-beam
+      continue-on-error: true
+      id: updated
+
+    - name: Roll back if there is no modification
+      run: git reset --hard ${{ github.sha }}
+      if: ${{ steps.updated.outcome == 'failure' }}
+
+    - uses: peter-evans/create-pull-request@v5
+      with:
+        commit-message: 'Update'
+        # Use a fine-grained personal access token that can trigger other
+        # workflows
+        token: ${{ secrets.PAT_FOR_PR }}
+        base: master
+        title: 'chore: Update flake inputs'
+        branch: create-pull-request/update
+        labels: automation,update
