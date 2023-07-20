@@ -1,10 +1,11 @@
-name: Check node-typescript
+name: Check bevy
 
 on:
   push:
     paths:
-    - node-typescript/**
-    - .github/workflows/check-node-typescript.yml
+    # Set this to the directory of the template
+    - minimal/**
+    - .github/workflows/check-bevy.yml
   workflow_dispatch:
 
 jobs:
@@ -19,16 +20,13 @@ jobs:
     - uses: actions/checkout@v3
       with:
         path: ./tmp
-    - run: nix flake new -t ./tmp#node-typescript ./work
+    - run: nix flake new -t ./tmp#bevy ./work
     - name: Prepare the project
       working-directory: work
       run: |
         git init
         git add .
 
-    - run: nix develop -L -c pnpm --version
-      working-directory: work
-    - run: nix develop -L -c tsc --version
-      working-directory: work
-    - run: nix develop -L -c typescript-language-server --version
+    # Run any task to check your flake
+    - run: nix build '.#hello' -L
       working-directory: work
