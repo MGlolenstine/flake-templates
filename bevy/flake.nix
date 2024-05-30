@@ -59,7 +59,7 @@
       toolchain =
         (pkgs.rustChannelOf {
           rustToolchain = ./rust-toolchain.toml;
-          sha256 = "sha256-NMhbUqVBmZz+QvFQCJEheTry6h/YD0jrK3TbWoGGn3k=";
+          sha256 = "sha256-Lhepl2K16hDOfGs22fr4kywRkNZ5yFCODlxvhlK9e/E=";
         })
         .rust;
 
@@ -77,7 +77,7 @@
         xorg.libXrandr
         vulkan-loader
         clang
-        pkgconfig
+        pkg-config
         mold
       ];
 
