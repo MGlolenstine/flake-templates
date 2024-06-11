@@ -17,6 +17,10 @@
           path = ./bevy;
           description = "A simple bevy boilerplate with GitLab pages setup";
         };
+        yew = {
+          path = ./yew;
+          description = "A simple Yew setup with GitLab pages setup";
+        };
       };
     }
     // flake-utils.lib.eachDefaultSystem
