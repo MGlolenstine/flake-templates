@@ -36,6 +36,7 @@
           stableToolchain.cargo
           stableToolchain.rustc
           stableToolchain.rustfmt
+          stableToolchain.clippy
           wasmToolchain.rust-std
         ];
        

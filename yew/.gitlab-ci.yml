@@ -5,21 +5,24 @@ stages:
 
 clippy:
   stage: clippy
+  image: nixos/nix
   tags:
-    - nix
+    - amd64
   script:
     - nix develop --extra-experimental-features 'nix-command flakes' --command bash -c 'cargo clippy -- -D warnings'
 
 build-wasm-job:
   stage: build
+  image: nixos/nix
   artifacts:
     name: "$CI_COMMIT_REF_NAME"
     paths:
-      - result/*
+      - res
   tags:
-    - nix
+    - amd64
   script:
     - "nix --extra-experimental-features 'nix-command flakes' build ."
+    - "mkdir res && cp -r /nix/store/*-trunk-template*/* res"
 
 pages:
   stage: deploy
@@ -30,6 +33,6 @@ pages:
     paths:
       - public/*
   tags:
-    - nix
+    - amd64
   script:
-    - "mv result/dist public"
+    - "mv res/dist public"
