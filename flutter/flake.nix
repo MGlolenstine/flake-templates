@@ -97,7 +97,7 @@
           pkg-config
           openssl
           binutils
-          jdk11_headless
+          jdk21_headless
           glibc_multi
           libunwind.dev
         ];
