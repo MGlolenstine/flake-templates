@@ -5,16 +5,11 @@
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-24.11";
     utils.url = "github:numtide/flake-utils";
-    fenix = {
-      url = "github:nix-community/fenix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs = {
     self,
     nixpkgs,
-    fenix,
     utils,
   }:
     utils.lib.eachDefaultSystem (
@@ -25,28 +20,23 @@
             allowUnfree = true;
             android_sdk.accept_license = true;
           };
-
-          overlays = [
-            fenix.overlays.default
-          ];
         };
 
-        androidBuildToolsVersion = "33.0.1";
+        androidBuildToolsVersion = "35.0.0";
 
         androidComposition = pkgs.androidenv.composeAndroidPackages {
           toolsVersion = "26.1.1";
-          platformToolsVersion = "33.0.3";
-          buildToolsVersions = [androidBuildToolsVersion "30.0.3"];
+          platformToolsVersion = "35.0.2";
+          buildToolsVersions = [ androidBuildToolsVersion ];
           includeEmulator = false;
-          emulatorVersion = "32.1.8";
-          platformVersions = ["28" "29" "30" "31" "33"];
+          platformVersions = [ "35" ];
           includeSources = true;
           includeSystemImages = false;
-          systemImageTypes = ["google_apis_playstore"];
-          abiVersions = ["armeabi-v7a" "arm64-v8a"];
-          cmakeVersions = ["3.22.1"];
+          systemImageTypes = [ "google_apis_playstore" ];
+          abiVersions = [ "armeabi-v7a" "arm64-v8a" ];
+          cmakeVersions = [ "3.22.1" ];
           includeNDK = true;
-          ndkVersions = ["25.1.8937393"];
+          ndkVersions = [ "25.1.8937393" ];
           useGoogleAPIs = false;
           useGoogleTVAddOns = false;
           includeExtras = [
