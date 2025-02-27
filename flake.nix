@@ -21,6 +21,10 @@
           path = ./yew;
           description = "A simple Yew setup with GitLab pages setup";
         };
+        flutter = {
+          path = ./flutter;
+          description = "A simple Flutter project setup";
+        };
       };
     }
     // flake-utils.lib.eachDefaultSystem
